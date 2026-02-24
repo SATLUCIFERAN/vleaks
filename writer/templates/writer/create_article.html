@@ -1,0 +1,244 @@
+
+{% extends 'writer/base.html' %}
+
+{% block title %}Create Article - V-Leaks{% endblock %}
+
+{% block nav_create %}active{% endblock %}
+
+{% block content %}
+
+<!-- Page Header -->
+<div class="page-header">
+    <div>
+        <h2 class="text-danger">✏️ Create New Article</h2>
+        <p class="subtitle">Share your story with the world</p>
+    </div>
+</div>
+
+<!-- Article Form -->
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card bg-dark border-secondary">
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}                    
+                    <!-- Title -->
+                    <div class="mb-4">
+                        <label for="title" class="form-label">
+                            Title <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" 
+                               class="form-control form-control-lg bg-dark text-white border-secondary" 
+                               id="title" 
+                               name="title"
+                               value="{{ title|default:'' }}"
+                               placeholder="Enter a compelling title..."
+                               required>
+                        <small class="text-muted">Make it catchy! This is the first thing readers see.</small>
+                    </div>                    
+                    <!-- Slug -->
+                    <div class="mb-4">
+                        <label for="slug" class="form-label">
+                            Slug
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-secondary text-white border-secondary">
+                                /article/
+                            </span>
+
+                            <input type="text" 
+                                   class="form-control bg-dark text-white border-secondary" 
+                                   id="slug" 
+                                   name="slug"
+                                   value="{{ slug|default:'' }}"
+                                   placeholder="auto-generated-from-title">
+                                   
+                        </div>
+                        <small class="text-muted">Leave blank to auto-generate from title.</small>
+                    </div>    
+                                    
+                    <!-- Category -->
+                    <div class="mb-4">
+                        <label for="category" class="form-label">
+                            Category <span class="text-danger">*</span>
+                        </label>
+                        <select class="form-select bg-dark text-white border-secondary" 
+                                id="category" 
+                                name="category"
+                                required>
+                            <option value="">Select a category...</option>
+                            {% for category in categories %}
+                                <option value="{{ category.id }}" 
+                                        {% if selected_category == category.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ category.name }}
+                                </option>
+                            {% empty %}
+                                <option value="" disabled>No categories available</option>
+                            {% endfor %}
+                        </select>
+                        <small class="text-muted">Choose the category that best fits your article.</small>
+                    </div>
+
+                    <!-- Cover Image -->
+                    <div class="mb-4">
+                        <label for="image" class="form-label">
+                            Cover Image
+                        </label>
+                        <input type="file" 
+                               class="form-control bg-dark text-white border-secondary" 
+                               id="image" 
+                               name="image"
+                               accept="image/*">
+                        <small class="text-muted">Recommended: 1200x630 pixels for best display.</small>
+                    </div>      
+
+                    <!-- Content -->
+                    <div class="mb-4">
+                        <label for="content" class="form-label">
+                            Content <span class="text-danger">*</span>
+                        </label>
+                        <textarea class="form-control bg-dark text-white border-secondary" 
+                                  id="content" 
+                                  name="content"
+                                  rows="12">{{ content|default:'' }}</textarea>
+                                  
+                        <small class="text-muted">
+                            Use the toolbar to format your content. Add headings, bold text, lists, and more!
+                        </small>
+                    </div>   
+                        
+                    <!-- Submit Buttons -->
+                    <div class="d-flex gap-2">
+                        <button type="submit" name="status" value="published" class="btn btn-danger">
+                            🚀 Publish Now
+                        </button>
+                        <button type="submit" name="status" value="draft" class="btn btn-outline-secondary">
+                            📄 Save as Draft
+                        </button>
+                        <a href="{% url 'writer_dashboard' %}" class="btn btn-link text-muted">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>    
+
+    <!-- Sidebar Tips -->
+    <div class="col-lg-4">
+        <div class="card bg-dark border-secondary mb-4">
+            <div class="card-header border-secondary">
+                <h6 class="mb-0">💡 Writing Tips</h6>
+            </div>
+            <div class="card-body">
+                <ul class="text-muted small mb-0">
+                    <li class="mb-2">Start with a hook that grabs attention</li>
+                    <li class="mb-2">Use short paragraphs for readability</li>
+                    <li class="mb-2">Include quotes and evidence</li>
+                    <li class="mb-2">End with a strong conclusion</li>
+                    <li>Proofread before publishing!</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="card bg-dark border-secondary">
+            <div class="card-header border-secondary">
+                <h6 class="mb-0">📊 Article Status</h6>
+            </div>
+            <div class="card-body">
+                <p class="text-muted small mb-2">
+                    <strong class="text-success">🚀 Published:</strong> Visible to everyone immediately.
+                </p>
+                <p class="text-muted small mb-0">
+                    <strong class="text-warning">📄 Draft:</strong> Only you can see it. Edit anytime.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- CKEditor 5 CDN -->
+<script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
+
+<script>
+    // Initialize CKEditor on the content textarea
+    ClassicEditor
+        .create(document.querySelector('#content'), {
+            // Toolbar configuration
+            toolbar: [
+                'heading',
+                '|',
+                'bold',
+                'italic',
+                'underline',
+                'strikethrough',
+                '|',
+                'link',
+                'bulletedList',
+                'numberedList',
+                '|',
+                'blockQuote',
+                'insertTable',
+                '|',
+                'undo',
+                'redo'
+            ],
+
+            // Heading options
+            heading: {
+                options: [
+                    { model: 'paragraph', title: 'Paragraph',
+                      class: 'ck-heading_paragraph' },
+                    { model: 'heading2', view: 'h2', title: 'Heading 2',
+                      class: 'ck-heading_heading2' },
+                    { model: 'heading3', view: 'h3', title: 'Heading 3',
+                      class: 'ck-heading_heading3' },
+                    { model: 'heading4', view: 'h4', title: 'Heading 4',
+                      class: 'ck-heading_heading4' }
+                ]
+            },
+
+            // Placeholder text
+            placeholder: 'Write your article here...'
+        })
+        .then(editor => {
+            console.log('CKEditor initialized successfully!');
+            
+            // Store editor instance for later use
+            window.editor = editor;
+
+            const form = document.querySelector('form');
+            const textarea = document.querySelector('#content');
+            
+            form.addEventListener('submit', function(event) {
+                // Get content from CKEditor
+                const editorData = editor.getData();
+                
+                // Put it in the hidden textarea
+                textarea.value = editorData;
+                
+                console.log('Form submitting with content:', editorData);
+                
+                // Check if content is empty
+                if (!editorData.trim()) {
+                    event.preventDefault();  // Stop form submission
+                    alert('Content is required!');
+                    return false;
+                }
+            });
+        })
+        .catch(error => {
+            console.error('CKEditor initialization failed:', error);
+
+        });
+</script>
+{% endblock %}
+
+
+
+
+
+
+

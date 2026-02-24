@@ -1,0 +1,64 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block title %}{{ author.username }} - V-Leaks{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <!-- Page Header -->
+    <div class="mb-4">
+        <span class="badge bg-danger">👤 JOURNALIST PROFILE</span>
+        <h1 class="display-4 text-danger mt-2">{{ author.username }}</h1>
+        <p class="lead text-muted">Underground journalist at V-Leaks</p>
+        <p class="text-light">
+            <strong>{{ articles|length }}</strong> article{{ articles|length|pluralize }} published
+        </p>
+    </div>
+    
+    <!-- Back to Articles -->
+    <a href="{% url 'blog_list' %}" class="btn btn-outline-secondary mb-4">
+        ← Back to Articles
+    </a>
+    
+    <!-- Articles Grid -->
+    <div class="row">
+        {% for article in articles %}
+        <div class="col-md-6 mb-4">
+            <div class="card bg-black border-primary h-100 article-card">
+                {% if article.image %}
+                <img src="{{ article.image.url }}" 
+                     class="card-img-top" 
+                     alt="{{ article.title }}">
+                {% else %}
+                <img src="{% static 'images/hero-stormfront.png' %}" 
+                     class="card-img-top" 
+                     alt="{{ article.title }}">
+                {% endif %}
+                
+                <div class="card-body">
+                    {% if article.category %}
+                    <span class="badge bg-primary mb-2">{{ article.category.name }}</span>
+                    {% endif %}
+                    <h5 class="card-title text-danger">{{ article.title }}</h5>
+                    <p class="text-muted small">
+                        <strong>By:</strong> {{ article.author.username }} |
+                        <strong>Date:</strong> {{ article.created_at|date:"M d, Y" }}
+                    </p>
+                    <p class="card-text">{{ article.content|truncatewords:20|striptags }}</p>
+                    <a href="{% url 'blog_detail' article.id %}" 
+                       class="btn btn-outline-danger">
+                        Read Investigation →
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-warning">
+                No articles by this author yet. The investigation continues...
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

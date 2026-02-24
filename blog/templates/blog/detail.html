@@ -1,0 +1,93 @@
+
+{% extends 'blog/base.html' %}
+{% load static %}
+{% load humanize %} 
+{% load bleach_tags %}
+
+{% block title %}{{ article.title }} - V-Leaks{% endblock %}
+
+{% block content %}
+<!-- Article Content -->
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">                
+                <!-- Back Button -->
+                <a href="/blog/" class="btn btn-outline-secondary mb-4">← Back to Articles</a>
+                
+                <!-- Article Header -->
+                <div class="mb-4">
+                    <span class="badge bg-danger">🔴 LEAKED</span>
+                    
+                    <!-- Category Badge (if exists) -->
+                    {% if article.category %}
+                        <span class="badge bg-primary">{{ article.category.name }}</span>
+                    {% endif %}
+                    
+                    <h1 class="display-3 text-danger mt-3">{{ article.title }}</h1>
+                </div>
+                
+                <!-- Hero Image (if exists) -->
+                {% if article.image %}
+                <div class="mb-4">
+                    <img src="{{ article.image.url }}" 
+                         class="img-fluid rounded" 
+                         alt="{{ article.title }}">
+                </div>
+                {% endif %}
+
+                <!-- Article Meta -->
+                <div class="card bg-black border-secondary mb-4">
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-md-4">
+                                <strong class="text-danger">Author:</strong><br>
+                                 <a href="{% url 'author_articles' article.author.username %}" class="text-light">
+                                     {{ article.author.username }}
+                                </a>
+                                {{ article.author.username }}
+                            </div>
+                            <div class="col-md-4">
+                                <strong class="text-danger">Published:</strong><br>
+                                {{ article.created_at|date:"F d, Y" }}
+                            </div>
+
+                            <div class="col-md-4">
+                                <strong class="text-danger">Views:</strong><br>
+                                {{ article.views|intcomma }}
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Article Content -->
+                <div class="card bg-black border-primary">
+                    <div class="card-body">
+                        <div class="article-content">
+                            {{ article.content|sanitize }}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+
+{{ article.views|intcomma }}
+
+
+{{ article.views|intword }}
+
+
+{{ article.created_at|naturaltime }}
+
+
+{{ article.created_at|naturalday }}
+
+
+{{ forloop.counter|ordinal }}
+
+{{ count|apnumber }}

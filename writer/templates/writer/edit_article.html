@@ -1,0 +1,333 @@
+
+{% extends 'writer/base.html' %}
+
+{% block title %}Edit: {{ article.title }} - V-Leaks{% endblock %}
+
+{% block nav_articles %}active{% endblock %}
+
+{% block content %}
+
+<!-- Page Header -->
+<div class="page-header">
+    <div>
+        <h2 class="text-danger">✏️ Edit Article</h2>
+        <p class="subtitle">Update your story</p>
+    </div>
+    <div>
+        <a href="{% url 'preview_article' article.id %}" class="btn btn-outline-info">
+            👁️ Preview
+        </a>
+    </div>
+</div>
+
+<!-- Article Form -->
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card bg-dark border-secondary">
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <!-- Title -->
+                    <div class="mb-4">
+                        <label for="title" class="form-label">
+                            Title <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" 
+                               class="form-control form-control-lg bg-dark text-white border-secondary" 
+                               id="title" 
+                               name="title"
+                               value="{{ article.title }}"
+                               placeholder="Enter a compelling title..."
+                               required>
+                        <small class="text-muted">Make it catchy! This is the first thing readers see.</small>
+                    </div>
+                    
+                    <!-- Slug -->
+                    <div class="mb-4">
+                        <label for="slug" class="form-label">
+                            Slug
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-secondary text-white border-secondary">
+                                /article/
+                            </span>
+                            <input type="text" 
+                                   class="form-control bg-dark text-white border-secondary" 
+                                   id="slug" 
+                                   name="slug"
+                                   value="{{ article.slug }}"
+                                   placeholder="auto-generated-from-title">
+                        </div>
+                        <small class="text-muted">
+                            Current: <code>/article/{{ article.slug }}/</code>
+                        </small>
+                    </div>
+                    
+                    <!-- Category -->
+                    <div class="mb-4">
+                        <label for="category" class="form-label">
+                            Category <span class="text-danger">*</span>
+                        </label>
+                        <select class="form-select bg-dark text-white border-secondary" 
+                                id="category" 
+                                name="category"
+                                required>
+                            <option value="">Select a category...</option>
+                            {% for category in categories %}
+                                <option value="{{ category.id }}" 
+                                        {% if article.category.id == category.id %}selected{% endif %}>
+                                    {{ category.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <small class="text-muted">Choose the category that best fits your article.</small>
+                    </div>
+                    
+                    <!-- Current Cover Image -->
+                    {% if article.image %}
+                    <div class="mb-4">
+                        <label class="form-label">Current Cover Image</label>
+                        <div class="current-image-preview">
+                            <img src="{{ article.image.url }}" 
+                                 alt="{{ article.title }}" 
+                                 class="img-thumbnail bg-dark border-secondary"
+                                 style="max-height: 200px;">
+                        </div>
+                        <small class="text-muted d-block mt-2">
+                            Upload a new image below to replace it.
+                        </small>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Cover Image Upload -->
+                    <div class="mb-4">
+                        <label for="image" class="form-label">
+                            {% if article.image %}
+                                Replace Cover Image
+                            {% else %}
+                                Cover Image
+                            {% endif %}
+                        </label>
+                        <input type="file" 
+                               class="form-control bg-dark text-white border-secondary" 
+                               id="image" 
+                               name="image"
+                               accept="image/*">
+                        <small class="text-muted">
+                            Recommended: 1200x630 pixels. Leave empty to keep current image.
+                        </small>
+                    </div>
+                    
+                    <!-- Content -->
+                    <div class="mb-4">
+                        <label for="content" class="form-label">
+                            Content <span class="text-danger">*</span>
+                        </label>
+                        <textarea class="form-control bg-dark text-white border-secondary" 
+                                  id="content" 
+                                  name="content"
+                                  rows="12">{{ article.content }}</textarea>
+                        <small class="text-muted">
+                            Use the toolbar to format your content.
+                        </small>
+                    </div>
+                    
+                    <!-- Status -->
+                    <div class="mb-4">
+                        <label class="form-label">Status</label>
+                        <div class="d-flex gap-3">
+                            <div class="form-check">
+                                <input class="form-check-input" 
+                                       type="radio" 
+                                       name="status" 
+                                       id="status_published" 
+                                       value="published"
+                                       {% if article.status == 'published' %}checked{% endif %}>
+                                <label class="form-check-label text-success" for="status_published">
+                                    🚀 Published
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" 
+                                       type="radio" 
+                                       name="status" 
+                                       id="status_draft" 
+                                       value="draft"
+                                       {% if article.status == 'draft' %}checked{% endif %}>
+                                <label class="form-check-label text-warning" for="status_draft">
+                                    📄 Draft
+                                </label>
+                            </div>
+                        </div>
+                        <small class="text-muted">
+                            Change status to unpublish or republish.
+                        </small>
+                    </div>
+                    
+                    <!-- Submit Buttons -->
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-danger">
+                            💾 Save Changes
+                        </button>
+                        <a href="{% url 'preview_article' article.id %}" class="btn btn-outline-secondary">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sidebar Info -->
+    <div class="col-lg-4">
+        <!-- Article Info Card -->
+        <div class="card bg-dark border-secondary mb-4">
+            <div class="card-header border-secondary">
+                <h6 class="mb-0">📊 Article Info</h6>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mb-0 text-muted small">
+                    <li class="mb-2">
+                        <strong>Created:</strong><br>
+                        {{ article.created_at|date:"F d, Y \a\t H:i" }}
+                    </li>
+                    <li class="mb-2">
+                        <strong>Last Updated:</strong><br>
+                        {{ article.updated_at|date:"F d, Y \a\t H:i" }}
+                    </li>
+                    <li class="mb-2">
+                        <strong>Views:</strong><br>
+                        {{ article.views }}
+                    </li>
+                    <li>
+                        <strong>Status:</strong><br>
+                        {% if article.status == 'published' %}
+                            <span class="badge bg-success">Published</span>
+                        {% else %}
+                            <span class="badge bg-warning text-dark">Draft</span>
+                        {% endif %}
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Danger Zone -->
+        <div class="card bg-dark border-danger">
+            <div class="card-header border-danger bg-danger bg-opacity-10">
+                <h6 class="mb-0 text-danger">⚠️ Danger Zone</h6>
+            </div>
+            <div class="card-body">
+                <p class="text-muted small mb-3">
+                    Permanently delete this article. This cannot be undone.
+                </p>
+                <button type="button" 
+                        class="btn btn-outline-danger btn-sm w-100"
+                        data-bs-toggle="modal" 
+                        data-bs-target="#deleteModal"
+                        data-article-id="{{ article.id }}"
+                        data-article-title="{{ article.title }}">
+                    🗑️ Delete Article
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal (same as dashboard) -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" 
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark border-danger">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title text-danger" id="deleteModalLabel">
+                    🗑️ Delete Article?
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-white mb-2">Are you sure you want to delete:</p>
+                <p class="text-danger fw-bold fs-5" id="deleteArticleTitle"></p>
+                <div class="alert alert-warning py-2 mb-0">
+                    <small>⚠️ This action cannot be undone!</small>
+                </div>
+            </div>
+            <div class="modal-footer border-secondary">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    Cancel
+                </button>
+                <a href="#" id="deleteConfirmBtn" class="btn btn-danger">
+                    🗑️ Yes, Delete
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- CKEditor 5 CDN -->
+<script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
+
+<script>
+    // Initialize CKEditor
+    ClassicEditor
+        .create(document.querySelector('#content'), {
+            toolbar: [
+                'heading', '|',
+                'bold', 'italic', '|',
+                'link', 'bulletedList', 'numberedList', '|',
+                'blockQuote', 'insertTable', '|',
+                'undo', 'redo'
+            ],
+            heading: {
+                options: [
+                    { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+                    { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
+                    { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
+                    { model: 'heading4', view: 'h4', title: 'Heading 4', class: 'ck-heading_heading4' }
+                ]
+            },
+            placeholder: 'Write your article here...'
+        })
+        .then(editor => {
+            console.log('CKEditor initialized successfully!');
+            window.editor = editor;
+            
+            // Sync CKEditor content to textarea before form submit
+            const form = document.querySelector('form');
+            const textarea = document.querySelector('#content');
+            
+            form.addEventListener('submit', function(event) {
+                const editorData = editor.getData();
+                textarea.value = editorData;
+                
+                if (!editorData.trim()) {
+                    event.preventDefault();
+                    alert('Content is required!');
+                    return false;
+                }
+            });
+        })
+        .catch(error => {
+            console.error('CKEditor initialization failed:', error);
+        });
+    
+    // Handle delete modal
+    const deleteModal = document.getElementById('deleteModal');
+    if (deleteModal) {
+        deleteModal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const articleId = button.getAttribute('data-article-id');
+            const articleTitle = button.getAttribute('data-article-title');
+            
+            document.getElementById('deleteArticleTitle').textContent = '"' + articleTitle + '"';
+            document.getElementById('deleteConfirmBtn').href = '/writer/delete/' + articleId + '/';
+        });
+    }
+</script>
+{% endblock %}
+
+
+
+

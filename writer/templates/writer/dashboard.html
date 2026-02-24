@@ -1,0 +1,203 @@
+
+{% extends 'writer/base.html' %}
+{% load humanize %}
+
+{% block title %}Writer Dashboard - V-Leaks{% endblock %}
+
+{% block nav_dashboard %}active{% endblock %}
+
+{% block content %}
+
+<!-- Page Header -->
+<div class="page-header">
+    <div>
+        <h2 class="text-danger">Welcome, {{ request.user.username }}!</h2>
+        <p class="subtitle">Your underground journalism headquarters</p>
+    </div>
+    <div class="actions">
+        <a href="#" class="btn btn-danger">
+            ✏️ New Article
+        </a>
+    </div>
+</div>
+
+
+<!-- Stats Row -->
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="stat-card published">
+            <span class="stat-icon">📝</span>
+            <div class="stat-number">{{ published_count|intcomma }}</div>
+            <div class="stat-label">Published</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card views">
+            <span class="stat-icon">👁️</span>
+            <div class="stat-number">{{ total_views|intcomma }}</div>
+            <div class="stat-label">Total Views</div>
+        </div>
+    </div>    
+    <div class="col-md-4">
+        <div class="stat-card drafts">
+            <span class="stat-icon">📄</span>
+            <div class="stat-number">{{ draft_count|intcomma }}</div>
+            <div class="stat-label">Drafts</div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Articles -->
+<div class="card bg-dark border-secondary">
+    <div class="card-header bg-danger text-white d-flex justify-content-between 
+                align-items-center">
+        <h5 class="mb-0">📰 Recent Articles</h5>
+        <span class="badge bg-light text-dark">{{ articles|length }} articles</span>
+    </div>
+    <div class="card-body p-0">
+        {% if articles %}
+        <table class="table table-dark article-table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Status</th>
+                    <th>Views</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for article in articles %}
+                <tr>
+
+                    <td>
+                        <a href="{% url 'preview_article' article.id %}" class="article-title">
+                            {{ article.title|truncatewords:5 }}
+                        </a>
+                    </td>
+
+                    <td>
+                        {% if article.category %}
+                            <span class="badge bg-primary">{{ article.category.name }}</span>
+                        {% else %}
+                            <span class="badge bg-secondary">None</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if article.status == 'published' %}
+                            <span class="badge badge-published">● Published</span>
+                        {% else %}
+                            <span class="badge badge-draft">● Draft</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="text-muted">👁️</span> {{ article.views|intcomma }}
+                    </td>
+                    <td>
+                        <small class="text-muted">{{ article.created_at|date:"M d, Y" }}</small>
+                    </td>
+                    <td>
+                        <a href="{% url 'preview_article' article.id %}" 
+                            class="btn btn-outline-info btn-action" 
+                            title="Preview">👁️</a>                        
+                        <a href="{% url 'edit_article' article.id %}" 
+                           class="btn btn-outline-primary btn-action" 
+                           title="Edit">✏️</a>
+                        <button type="button" 
+                                class="btn btn-outline-danger btn-action" 
+                                title="Delete"
+                                data-bs-toggle="modal" 
+                                data-bs-target="#deleteModal"
+                                data-article-id="{{ article.id }}"
+                                data-article-title="{{ article.title }}">
+                            🗑️
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="text-center py-5">
+            <div class="mb-3" style="font-size: 3rem;">📭</div>
+            <h5 class="text-muted">No articles yet</h5>
+            <p class="text-muted mb-4">Start your first expose and make Vought sweat!</p>
+            <a href="#" class="btn btn-danger">
+                ✏️ Create Your First Article
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" 
+     aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark border-danger">
+            <!-- Modal Header -->
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title text-danger" id="deleteModalLabel">
+                    🗑️ Delete Article?
+                </h5>
+                <button type="button" class="btn-close btn-close-white" 
+                        data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <p class="text-white mb-2">Are you sure you want to delete:</p>
+                <p class="text-danger fw-bold fs-5" id="deleteArticleTitle">
+                    <!-- Article title will be inserted here by JavaScript -->
+                </p>
+                <div class="alert alert-warning py-2 mb-0">
+                    <small>⚠️ This action cannot be undone!</small>
+                </div>
+            </div>
+            
+            <!-- Modal Footer -->
+            <div class="modal-footer border-secondary">
+                <button type="button" class="btn btn-outline-secondary" 
+                        data-bs-dismiss="modal">
+                    Cancel
+                </button>
+                <a href="#" id="deleteConfirmBtn" class="btn btn-danger">
+                    🗑️ Yes, Delete
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Handle delete modal
+    const deleteModal = document.getElementById('deleteModal');
+    
+    deleteModal.addEventListener('show.bs.modal', function(event) {
+        // Button that triggered the modal
+        const button = event.relatedTarget;
+        
+        // Extract data from button attributes
+        const articleId = button.getAttribute('data-article-id');
+        const articleTitle = button.getAttribute('data-article-title');
+        
+        // Update modal content
+        const titleElement = document.getElementById('deleteArticleTitle');
+        titleElement.textContent = '"' + articleTitle + '"';
+        
+        // Update confirm button href
+        const confirmBtn = document.getElementById('deleteConfirmBtn');
+        confirmBtn.href = '/writer/delete/' + articleId + '/';
+        
+        console.log('Delete modal opened for:', articleTitle, 'ID:', articleId);
+    });
+</script>
+{% endblock %}
+
+
+
+

@@ -1,0 +1,904 @@
+
+/* ============================================
+   V-LEAKS WRITER PANEL STYLES
+   ============================================ */
+
+/* ---------- Base Styles ---------- */
+body {
+    background-color: #0a0a0a;
+    color: #e0e0e0;
+    font-family: 'Courier New', monospace;
+    min-height: 100vh;
+}
+
+/* ---------- Sidebar ---------- */
+
+.sidebar {
+    background-color: #1a1a1a;
+    min-height: 100vh;
+    border-right: 1px solid #dc3545;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 220px;
+    padding-top: 20px;
+}
+.sidebar-brand {
+    color: #dc3545;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+}
+
+/* ============================================
+   SIDEBAR NAVIGATION (Improved)
+   ============================================ */
+.sidebar-link {
+    display: block;
+    padding: 0.75rem 1.25rem;
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border-left: 3px solid transparent;
+    margin: 0.125rem 0;
+    position: relative;  /* For the ::after dot positioning */
+}
+.sidebar-link:hover {
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-left-color: rgba(220, 53, 69, 0.5);
+    text-decoration: none;
+}
+.sidebar-link.active {
+    color: #fff;
+    background: linear-gradient(90deg, rgba(220, 53, 69, 0.2) 0%, transparent 100%);
+    border-left-color: #dc3545;
+    font-weight: 500;
+}
+
+/* Active indicator dot */
+.sidebar-link.active::after {
+    content: '';
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    background-color: #dc3545;
+    border-radius: 50%;
+}
+
+/* ---------- Main Content Area ---------- */
+.main-content {
+    margin-left: 220px;
+    padding: 30px;
+    min-height: 100vh;
+}
+
+
+
+/* ============================================
+   STATS CARDS (Improved)
+   ============================================ */
+.stat-card {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+.stat-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #dc3545;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+.stat-label {
+    color: #6c757d;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Individual card colors */
+.stat-card.published {
+    border-left: 4px solid #28a745;
+}
+.stat-card.published .stat-icon {
+    color: #28a745;
+}
+.stat-card.views {
+    border-left: 4px solid #17a2b8;
+}
+.stat-card.views .stat-icon {
+    color: #17a2b8;
+}
+.stat-card.drafts {
+    border-left: 4px solid #ffc107;
+}
+.stat-card.drafts .stat-icon {
+    color: #ffc107;
+}
+
+
+/* ============================================
+   ARTICLE TABLE (Improved)
+   ============================================ */
+
+.article-table {
+    margin-bottom: 0;
+}
+
+.article-table thead th {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-bottom: 2px solid #dc3545;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    color: #6c757d;
+    padding: 1rem;
+}
+
+.article-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.article-table tbody tr:hover {
+    background-color: rgba(220, 53, 69, 0.1);
+}
+
+.article-table td {
+    padding: 1rem;
+    vertical-align: middle;
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Article title link */
+.article-title {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.article-title:hover {
+    color: #dc3545;
+}
+
+/* Status badges */
+.badge-published {
+    background-color: #28a745;
+    color: white;
+}
+
+.badge-draft {
+    background-color: #ffc107;
+    color: #000;
+}
+
+/* Action buttons */
+.btn-action {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.8rem;
+    border-radius: 4px;
+    margin-right: 0.25rem;
+}
+
+/* ---------- Buttons ---------- */
+.btn-writer {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white;
+    transition: all 0.3s ease;
+}
+.btn-writer:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+}
+
+/* ---------- Page Header ---------- */
+.page-header {
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #333;
+}
+.page-header h2 {
+    color: #dc3545;
+    margin-bottom: 5px;
+}
+.page-header p {
+    color: #999;
+    margin-bottom: 0;
+}
+
+/* ---------- Alerts ---------- */
+.alert-writer {
+    background-color: rgba(220, 53, 69, 0.1);
+    border: 1px solid #dc3545;
+    color: #e0e0e0;
+}
+
+/* ---------- Empty State ---------- */
+.empty-state {
+    text-align: center;
+    padding: 50px 20px;
+    color: #666;
+}
+.empty-state i {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+/* Mobile: Stack layout */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        left: -250px;
+        top: 0;
+        height: 100vh;
+        z-index: 1000;
+        transition: left 0.3s ease;
+    }    
+    .sidebar.open {
+        left: 0;
+    }    
+    .main-content {
+        margin-left: 0;
+        padding: 1rem;
+    }
+    
+    /* Mobile menu toggle button */
+    .mobile-menu-toggle {
+        display: block;
+        position: fixed;
+        top: 1rem;
+        left: 1rem;
+        z-index: 999;
+        background-color: #dc3545;
+        border: none;
+        color: white;
+        padding: 0.5rem 0.75rem;
+        border-radius: 4px;
+        font-size: 1.25rem;
+    }
+    
+    /* Stats cards */
+    .stat-card {
+        margin-bottom: 1rem;
+    }    
+    .stat-number {
+        font-size: 2rem;
+    }
+    
+    /* Table scroll */
+    .table-responsive {
+        overflow-x: auto;
+    }
+    
+    /* Page header stack */
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+}
+
+/* Hide mobile toggle on desktop */
+@media (min-width: 769px) {
+    .mobile-menu-toggle {
+        display: none;
+    }
+}
+
+/* Tablet adjustments */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .sidebar {
+        width: 200px;
+    }    
+    .main-content {
+        margin-left: 200px;
+    }
+}
+
+
+
+/* ============================================
+   LOGIN PAGE STYLES
+   ============================================ */
+
+/* Login page - centered layout */
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+/* Login card container */
+.login-card {
+    background-color: #1a1a1a;
+    border: 1px solid #dc3545;
+    border-radius: 10px;
+    padding: 40px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 0 30px rgba(220, 53, 69, 0.2);
+}
+/* Title with glow effect */
+.login-title {
+    color: #dc3545;
+    text-align: center;
+    margin-bottom: 30px;
+    text-shadow: 0 0 10px rgba(220, 53, 69, 0.5);
+}
+/* Form inputs - dark style */
+.login-card .form-control {
+    background-color: #0a0a0a;
+    border: 1px solid #333;
+    color: #e0e0e0;
+}
+.login-card .form-control:focus {
+    background-color: #0a0a0a;
+    border-color: #dc3545;
+    color: #e0e0e0;
+    box-shadow: 0 0 10px rgba(220, 53, 69, 0.3);
+}
+
+/* Login button */
+.btn-login {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    width: 100%;
+    padding: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.btn-login:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+    box-shadow: 0 0 20px rgba(220, 53, 69, 0.4);
+}
+/* Error message */
+.error-message {
+    background-color: rgba(220, 53, 69, 0.1);
+    border: 1px solid #dc3545;
+    color: #dc3545;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+/* Fix muted text visibility on dark background */
+.text-muted {
+    color: #888 !important;
+}
+/* Register link */
+.register-link a {
+    color: #dc3545;
+    text-decoration: none;
+}
+.register-link a:hover {
+    text-decoration: underline;
+}
+
+
+
+/* ============================================
+   ERROR DISPLAY STYLES
+   ============================================ */
+
+/* Error box container */
+.error-box {
+    background-color: rgba(220, 53, 69, 0.1);
+    border: 1px solid #dc3545;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+/* Error list */
+.error-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.error-list li {
+    color: #dc3545;
+    padding: 5px 0;
+    padding-left: 20px;
+    position: relative;
+}
+.error-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+}
+
+
+
+/* ============================================
+   MESSAGE STYLES
+   ============================================ */
+
+/* Messages container */
+.messages-container {
+    margin-bottom: 20px;
+}
+/* Base alert style for dark theme */
+.messages-container .alert {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    padding: 12px 40px 12px 15px;
+    margin-bottom: 10px;
+    position: relative;
+}
+/* Success message */
+.messages-container .alert-success {
+    background-color: rgba(40, 167, 69, 0.2);
+    border: 1px solid #28a745;
+    color: #28a745;
+}
+
+/* Error message */
+.messages-container .alert-error {
+    background-color: rgba(220, 53, 69, 0.2);
+    border: 1px solid #dc3545;
+    color: #dc3545;
+}
+/* Warning message */
+.messages-container .alert-warning {
+    background-color: rgba(255, 193, 7, 0.2);
+    border: 1px solid #ffc107;
+    color: #ffc107;
+}
+/* Info message */
+.messages-container .alert-info {
+    background-color: rgba(23, 162, 184, 0.2);
+    border: 1px solid #17a2b8;
+    color: #17a2b8;
+}
+/* Close button */
+.messages-container .btn-close {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    filter: invert(1);
+    opacity: 0.5;
+}
+.messages-container .btn-close:hover {
+    opacity: 1;
+}
+
+
+
+/* ============================================
+   SIDEBAR PROFILE SECTION
+   ============================================ */
+
+/* Profile container */
+.sidebar-profile {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Letter avatar (fallback) */
+.profile-avatar {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, #dc3545, #ff6b6b);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: white;
+    text-transform: uppercase;
+}
+
+/* Profile picture (when uploaded) */
+.profile-avatar-img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #dc3545;
+}
+
+/* Profile text */
+.sidebar-profile h6 {
+    font-size: 0.95rem;
+}
+
+.sidebar-profile small {
+    font-size: 0.75rem;
+}
+
+
+
+/* ============================================
+   PAGE HEADER
+   ============================================ */
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.page-header h2 {
+    margin-bottom: 0.25rem;
+}
+
+.page-header .subtitle {
+    color: #6c757d;
+    margin-bottom: 0;
+}
+
+.page-header .actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+
+
+
+/* ============================================
+   ADDITIONAL POLISH
+   ============================================ */
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Better focus states */
+.btn:focus,
+.form-control:focus {
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.25);
+}
+/* Card improvements */
+.card {
+    border-radius: 12px;
+    overflow: hidden;
+}
+.card-header {
+    border-bottom: none;
+}
+/* Button hover effects */
+.btn-danger {
+    transition: all 0.2s ease;
+}
+.btn-danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+}
+/* Link transitions */
+a {
+    transition: color 0.2s ease;
+}
+/* Scrollbar styling (Webkit browsers) */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #1a1a2e;
+}
+::-webkit-scrollbar-thumb {
+    background: #dc3545;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #ff6b6b;
+}
+/* Selection color */
+::selection {
+    background-color: rgba(220, 53, 69, 0.3);
+    color: white;
+}
+
+
+
+
+/* ============================================
+   ARTICLE FORM STYLES
+   ============================================ */
+/* Form labels */
+.form-label {
+    color: #fff;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+/* Form inputs */
+.form-control,
+.form-select {
+    background-color: #1a1a2e;
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+
+.form-control:focus,
+.form-select:focus {
+    background-color: #1a1a2e;
+    border-color: #dc3545;
+    color: #fff;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.25);
+}
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+/* Large input for title */
+.form-control-lg {
+    font-size: 1.25rem;
+    padding: 0.75rem 1rem;
+}
+/* Input group styling */
+.input-group-text {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #6c757d;
+}
+/* Textarea */
+textarea.form-control {
+    resize: vertical;
+    min-height: 200px;
+}
+/* File input */
+input[type="file"].form-control {
+    padding: 0.5rem;
+}
+input[type="file"].form-control::file-selector-button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    margin-right: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+input[type="file"].form-control::file-selector-button:hover {
+    background-color: #bb2d3b;
+}
+/* Select dropdown */
+.form-select {
+    cursor: pointer;
+}
+.form-select option {
+    background-color: #1a1a2e;
+    color: #fff;
+}
+/* Helper text */
+.form-control + small,
+.form-select + small,
+.input-group + small {
+    display: block;
+    margin-top: 0.25rem;
+    color: #6c757d;
+}
+/* Button group */
+.d-flex.gap-2 {
+    gap: 0.5rem !important;
+}
+/* Form card */
+.card .card-body form {
+    max-width: 100%;
+}
+
+
+
+/* ============================================
+   ARTICLE PREVIEW
+   ============================================ */
+/* Preview image container */
+.preview-image-container {
+    max-height: 400px;
+    overflow: hidden;
+}
+.preview-image {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+}
+/* No image placeholder */
+.preview-no-image {
+    height: 200px;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+    font-size: 1.25rem;
+}
+/* Article content styling */
+.article-content {
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+.article-content p {
+    margin-bottom: 1.5rem;
+}
+/* Preview notice */
+.alert-warning {
+    background-color: rgba(255, 193, 7, 0.1);
+    border-color: rgba(255, 193, 7, 0.3);
+    color: #ffc107;
+}
+
+
+
+/* ============================================
+   CKEDITOR 5 DARK THEME
+   ============================================ */
+/* Editor container */
+.ck.ck-editor {
+    width: 100%;
+}
+/* Toolbar */
+.ck.ck-toolbar {
+    background-color: #1a1a2e !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+.ck.ck-toolbar .ck-toolbar__items {
+    background-color: #1a1a2e !important;
+}
+/* Toolbar buttons */
+.ck.ck-button {
+    color: #fff !important;
+    background-color: transparent !important;
+}
+
+.ck.ck-button:hover {
+    background-color: rgba(220, 53, 69, 0.2) !important;
+}
+
+.ck.ck-button.ck-on {
+    background-color: rgba(220, 53, 69, 0.3) !important;
+    color: #dc3545 !important;
+}
+
+/* Dropdown panels */
+.ck.ck-dropdown__panel {
+    background-color: #1a1a2e !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.ck.ck-list__item .ck-button {
+    color: #fff !important;
+}
+
+.ck.ck-list__item .ck-button:hover {
+    background-color: rgba(220, 53, 69, 0.2) !important;
+}
+
+/* Editor content area */
+.ck.ck-editor__main {
+    background-color: #1a1a2e !important;
+}
+
+.ck.ck-editor__editable {
+    background-color: #1a1a2e !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    color: #fff !important;
+    min-height: 300px;
+}
+
+.ck.ck-editor__editable:focus {
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.25) !important;
+}
+
+/* Placeholder text */
+.ck.ck-editor__editable.ck-placeholder::before {
+    color: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Links in editor */
+.ck.ck-editor__editable a {
+    color: #dc3545 !important;
+}
+
+/* Headings in editor */
+.ck.ck-editor__editable h2 {
+    color: #dc3545;
+    font-size: 1.75rem;
+    margin-top: 1.5rem;
+}
+
+.ck.ck-editor__editable h3 {
+    color: #fff;
+    font-size: 1.5rem;
+    margin-top: 1.25rem;
+}
+
+.ck.ck-editor__editable h4 {
+    color: #ccc;
+    font-size: 1.25rem;
+    margin-top: 1rem;
+}
+
+/* Block quote */
+.ck.ck-editor__editable blockquote {
+    border-left: 4px solid #dc3545;
+    padding-left: 1rem;
+    font-style: italic;
+    color: #aaa;
+}
+
+/* Lists */
+.ck.ck-editor__editable ul,
+.ck.ck-editor__editable ol {
+    padding-left: 2rem;
+}
+
+/* Tables */
+.ck.ck-editor__editable table {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.ck.ck-editor__editable td,
+.ck.ck-editor__editable th {
+    border-color: rgba(255, 255, 255, 0.2);
+    padding: 0.5rem;
+}
+
+
+
+
+/* ============================================
+   DELETE CONFIRMATION MODAL
+   ============================================ */
+
+/* Modal backdrop (darker) */
+.modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+/* Modal content */
+.modal-content.bg-dark {
+    box-shadow: 0 10px 40px rgba(220, 53, 69, 0.3);
+}
+/* Modal header */
+.modal .modal-header {
+    background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), transparent);
+}
+/* Warning alert in modal */
+.modal .alert-warning {
+    background-color: rgba(255, 193, 7, 0.1);
+    border-color: rgba(255, 193, 7, 0.3);
+    color: #ffc107;
+}
+/* Confirm delete button hover */
+.modal .btn-danger:hover {
+    background-color: #c82333;
+    transform: scale(1.05);
+}
+/* Cancel button */
+.modal .btn-outline-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+

@@ -1,0 +1,68 @@
+
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block title %}{{ category.name }} - V-Leaks{% endblock %}
+
+{% block nav_categories %}active{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <!-- Page Header -->
+    <div class="mb-4">
+        <span class="badge bg-danger">📁 CLASSIFIED FOLDER</span>
+        <h1 class="display-4 text-danger mt-2">{{ category.name }}</h1>
+        <p class="lead text-muted">{{ category.description }}</p>
+        <p class="text-light">
+            <strong>{{ articles|length }}</strong> article{{ articles|length|pluralize }} found
+        </p>
+    </div>
+    
+    <!-- Back to Categories -->
+    <a href="{% url 'category_list' %}" class="btn btn-outline-secondary mb-4">
+        ← Back to Categories
+    </a>
+    
+    <!-- Articles Grid -->
+    <div class="row">
+        {% for article in articles %}
+        <div class="col-md-6 mb-4">
+            <div class="card bg-black border-primary h-100 article-card">
+                {% if article.image %}
+                <img src="{{ article.image.url }}" 
+                     class="card-img-top"                      
+                     alt="{{ article.title }}">
+                {% else %}
+                <img src="{% static 'images/hero-stormfront.png' %}" 
+                     class="card-img-top"                      
+                     alt="{{ article.title }}">
+                {% endif %}
+                
+                <div class="card-body">
+                    <span class="badge bg-primary mb-2">{{ category.name }}</span>
+                    <h5 class="card-title text-danger">{{ article.title }}</h5>
+                    <p class="text-muted small">
+                        <strong>By:</strong> 
+                        <a href="{% url 'author_articles' article.author.username %}" class="text-danger">
+                        {{ article.author.username }}
+                        </a> |
+                        <strong>Date:</strong> {{ article.created_at|date:"M d, Y" }}
+                    </p>
+                    <p class="card-text">{{ article.content|truncatewords:20|striptags }}</p>
+                    <a href="{% url 'blog_detail' article.id %}" 
+                       class="btn btn-outline-danger">
+                        Read Investigation →
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-warning">
+                No articles in this category yet. The investigation continues...
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

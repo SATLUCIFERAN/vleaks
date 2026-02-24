@@ -1,0 +1,250 @@
+
+{% extends 'blog/base.html' %}
+{% load static %}
+{% load humanize %} 
+
+{% block title %}V-Leaks - Exposing Corruption{% endblock %}
+
+{% block nav_articles %}active{% endblock %}
+
+
+{% block content %}
+    <!-- Main Content Area (Grid Layout) -->
+    <div class="container my-5">
+        <div class="row">            
+            <!-- Main Column (8/12 = 66%) -->
+            <div class="col-lg-8">                
+                <!-- Page Header -->
+                <div class="mb-4">
+                    <span class="badge bg-danger">🔴 LEAKED DOCUMENTS</span>
+                    <h1 class="display-4 text-danger mt-2">Latest Exposes</h1>
+                    <p class="lead text-muted">The truth they don't want you to see</p>
+                </div>
+
+                <!-- Articles with Hero Images -->
+                {% for article in articles %}
+                <div class="card bg-black border-primary mb-4">                    
+                    <!-- Hero Image (MEDIA - from database) -->
+                    {% if article.image %}
+                        <img src="{{ article.image.url }}" 
+                            class="hero-image p-3" alt="{{ article.title }}">
+                    {% else %}
+                        <!-- Fallback to STATIC if no image uploaded -->
+                        <img src="{% static 'images/hero-stormfront.png' %}" 
+                            class="hero-image p-3" alt="{{ article.title }}">
+                    {% endif %}
+                                        
+                    <div class="card-body">
+                        <span class="badge bg-primary mb-2">#{{ forloop.counter }}</span>
+                        <h3 class="card-title text-danger">{{ article.title|upper }}</h3>
+                        <p class="text-muted">
+                            <strong>By:</strong>
+                            <a href="{% url 'author_articles' article.author.username %}" class="text-danger">
+                                {{ article.author.username }}
+                            </a> |   
+                            <strong>Date:</strong> {{ article.created_at|date:"F d, Y" }}
+                           </p>                     
+                        <p class="card-text">{{ article.content|truncatewords:15 }}</p>
+                        <a href="{% url 'blog_detail' article.id %}" 
+                           class="btn btn-outline-danger">
+                            Read Investigation →
+                        </a>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="alert alert-warning">No articles yet. 
+                           The truth is still being uncovered...</div>
+                {% endfor %}
+                
+                <!-- ========== PAGINATION ========== -->
+                {% if articles.has_other_pages %}
+                <nav aria-label="Page navigation" class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        
+                        <!-- Previous Button -->
+                        {% if articles.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ articles.previous_page_number }}">
+                                    « Previous
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">« Previous</span>
+                            </li>
+                        {% endif %}
+                        
+                        <!-- Page Numbers -->                         
+                        {% for num in articles.paginator.page_range %}
+                            {% if articles.number == num %}
+                                <li class="page-item active">
+                                    <span class="page-link">{{ num }}</span>
+                                </li>
+                            {% else %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        <!-- Next Button -->
+                        {% if articles.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ articles.next_page_number }}">
+                                    Next »
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">Next »</span>
+                            </li>
+                        {% endif %}                        
+                    </ul>
+                </nav>
+                {% endif %}
+
+                <!-- ========== END PAGINATION ========== -->
+            </div>
+                        
+            <!-- ========== SIDEBAR (Right Side) ========== -->
+            <div class="col-lg-4">                
+                <!-- Latest Articles Widget -->
+                <div class="card bg-black border-danger mb-4">
+                    <div class="card-header bg-danger text-white">
+                        <h5 class="mb-0">🩸 Latest Exposés</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled mb-0">
+                            {% for article in latest_articles %}
+                            <li class="mb-3 pb-3 border-bottom border-secondary">
+                                <a href="{% url 'blog_detail' article.id %}" 
+                                   class="text-light text-decoration-none">
+                                    <strong>{{ article.title|truncatewords:6 }}</strong>
+                                </a>
+                                <br>
+                                <small class="text-muted">
+                                    {{ article.created_at|date:"M d, Y" }}
+                                </small>
+                            </li>
+                            {% empty %}
+                            <li class="text-muted">No articles yet.</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>   
+
+                <!-- ========== RECOMMENDED ARTICLES WIDGET (ADD THIS!) ========== -->
+                {% if recommended_articles %}
+                <div class="card bg-black border-info mb-4">
+                    <div class="card-header bg-info text-dark">
+                        <h5 class="mb-0">⭐ Editor's Picks</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled mb-0">
+                            {% for article in recommended_articles %}
+                            <li class="mb-3 pb-3 border-bottom border-secondary">
+                                <div class="d-flex align-items-start">
+                                    <span class="text-warning me-2">⭐</span>
+                                    <div>
+                                        <a href="{% url 'blog_detail' article.id %}" 
+                                        class="text-light text-decoration-none">
+                                            <strong>{{ article.title|truncatewords:6 }}</strong>
+                                        </a>
+                                        <br>
+                                        <small class="text-muted">
+                                            {{ article.content|truncatewords:10|striptags }}
+                                        </small>
+                                    </div>
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                {% endif %}
+                <!-- ========== END RECOMMENDED ARTICLES WIDGET ========== -->
+
+                <!-- ========== POPULAR ARTICLES WIDGET (ADD THIS!) ========== -->
+                <div class="card bg-black border-warning mb-4">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0">🔥 Most Popular</h5>
+                    </div>                    
+                    <div class="card-body">
+                        <ol class="list-unstyled mb-0">
+                            {% for article in popular_articles %}
+                            <li class="mb-3 pb-3 border-bottom border-secondary d-flex 
+                                       justify-content-between align-items-start">
+                                <div>
+                                    <span class="badge bg-warning text-dark me-2">{{ forloop.counter }}</span>
+                                    <a href="{% url 'blog_detail' article.id %}" 
+                                    class="text-light text-decoration-none">
+                                        {{ article.title|truncatewords:6 }}
+                                    </a>
+                                    <br>
+
+                                    <small class="text-muted">
+                                        {{ article.created_at|date:"M d, Y" }}
+                                    </small>
+                                </div>
+                                <span class="badge bg-danger">{{ article.views|intcomma }}</span>
+                            </li>
+                            {% empty %}
+                            <li class="text-muted">No popular articles yet.</li>
+                            {% endfor %}
+                        </ol>
+                    </div>
+                </div>
+                <!-- ========== END POPULAR ARTICLES WIDGET ========== -->       
+
+                <!-- Categories Widget -->
+                <div class="card bg-black border-secondary mb-4">
+                    <div class="card-header bg-danger text-white">
+                        <h5 class="mb-0">📂 Categories</h5>
+                    </div>
+                    <div class="card-body">                        
+                        <ul class="list-unstyled">
+                            {% for category in categories %}
+                            <li class="mb-2">
+                                <a href="{% url 'category_articles' category.slug %}" class="text-danger">
+                                    • {{ category.name }}
+                                </a>
+                            </li>
+                            {% empty %}
+                            <li class="text-muted">No categories yet.</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                <!-- Trending Widget -->
+                <div class="card bg-black border-secondary">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">🔥 Trending</h5>
+                    </div>
+                    <div class="card-body">
+                        <ol class="list-unstyled">
+                            <li class="mb-2 text-light">1. A-Train's Scandal</li>
+                            <li class="mb-2 text-light">2. Deep's Truth</li>
+                            <li class="mb-2 text-light">3. Maeve's Fall</li>
+                        </ol>
+                    </div>
+                </div>
+                <!-- Hero Gallery Widget -->
+                <div class="card bg-black border-secondary mt-4">
+                    <div class="card-header bg-danger text-white">
+                        <h5 class="mb-0">🎭 Exposed Heroes</h5>
+                    </div>
+                    <div class="card-body">
+                        <img src="{% static 'images/hero_time_thief.png' %}" 
+                             class="sidebar-hero-image" alt="Time Thief">
+                        <img src="{% static 'images/hero_digital_ghost.png' %}" 
+                             class="sidebar-hero-image" alt="Digital Ghost">
+                        <img src="{% static 'images/hero_power_broker.png' %}" 
+                             class="sidebar-hero-image" alt="Power Broker">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+

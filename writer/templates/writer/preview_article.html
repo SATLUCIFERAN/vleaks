@@ -1,0 +1,93 @@
+
+{% extends 'writer/base.html' %}
+{% load bleach_tags %}
+
+{% block title %}Preview: {{ article.title }} - V-Leaks{% endblock %}
+
+{% block content %}
+<!-- Preview Header -->
+<div class="page-header">
+    <div>
+        <h2 class="text-danger">👁️ Article Preview</h2>
+        <p class="subtitle">This is how your article will appear to readers</p>
+    </div>
+    <div class="actions">
+        <a href="{% url 'writer_dashboard' %}" class="btn btn-outline-secondary">
+            ← Back to Dashboard
+        </a>
+        {% if article.status == 'draft' %}
+            <span class="badge bg-warning text-dark ms-2">📄 DRAFT</span>
+        {% else %}
+            <span class="badge bg-success ms-2">✅ PUBLISHED</span>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Preview Notice -->
+{% if article.status == 'draft' %}
+<div class="alert alert-warning mb-4">
+    <strong>📝 Draft Preview:</strong> This article is not yet published. Only you can see this preview.
+</div>
+{% endif %}
+
+<!-- Article Preview Card -->
+<div class="card bg-dark border-secondary">
+    <!-- Cover Image -->
+    {% if article.image %}
+    <div class="preview-image-container">
+        <img src="{{ article.image.url }}" 
+             alt="{{ article.title }}" 
+             class="card-img-top preview-image">
+    </div>
+    {% else %}
+    <div class="preview-no-image">
+        <span>📷 No cover image</span>
+    </div>
+    {% endif %}
+    
+    <div class="card-body p-4">
+        <!-- Category Badge -->
+        <div class="mb-3">
+            <span class="badge bg-primary">{{ article.category.name }}</span>
+        </div>
+        
+        <!-- Title -->
+        <h1 class="text-white mb-3">{{ article.title }}</h1>
+        
+        <!-- Meta Info -->
+        <div class="text-muted mb-4">
+            <span>✍️ {{ article.author.username }}</span>
+            <span class="mx-2">•</span>
+            <span>📅 {{ article.created_at|date:"F d, Y" }}</span>
+            <span class="mx-2">•</span>
+            <span>👁️ {{ article.views }} views</span>
+        </div>
+        
+        <hr class="border-secondary">
+        
+        <!-- Content -->
+        <div class="article-content text-white">
+            {{ article.content|sanitize }}
+        </div>
+
+    </div>
+</div>
+
+<!-- Action Buttons -->
+<div class="mt-4 d-flex gap-2">
+    <a href="{% url 'blog_detail' article.id %}" class="btn btn-outline-primary" target="_blank">
+        🌐 View Public Page
+    </a>   
+    <a href="{% url 'edit_article' article.id %}" class="btn btn-outline-secondary">
+        ✏️ Edit Article
+    </a>
+    {% if article.status == 'draft' %}
+        <button class="btn btn-success">
+            🚀 Publish Now
+        </button>
+    {% endif %}
+</div>
+{% endblock %}
+
+
+

@@ -1,0 +1,56 @@
+
+{% extends 'blog/base.html' %}
+
+{% block title %}Categories - V-Leaks{% endblock %}
+
+{% block nav_categories %}active{% endblock %}
+
+{% block content %}
+    <!-- Main Content -->
+    <div class="container my-5">        
+        <!-- Page Header -->
+        <div class="mb-4">
+            <span class="badge bg-danger">📁 CLASSIFIED FOLDERS</span>
+            <h1 class="display-4 text-danger mt-2">Categories</h1>
+            <p class="lead text-light">Choose your rabbit hole. Each category contains 
+                     classified information that Vought doesn't want you to see.</p>
+        </div>
+
+        <!-- Categories Grid -->
+        <div class="row">
+            {% for category in categories %}
+            <div class="col-md-6 mb-4">
+                <div class="card bg-black border-primary h-100">
+                    <div class="card-body">
+                        <h3 class="card-title text-danger">{{ category.name }}</h3>
+                        <p class="card-text">{{ category.description }}</p>
+
+                        <a href="{% url 'category_articles' category.slug %}" class="btn btn-outline-danger">
+                            Browse {{ category.name }} →
+                        </a>
+                        
+                    </div>
+                    <div class="card-footer bg-black border-secondary">
+                        <small class="text-muted">Slug: /{{ category.slug }}/</small>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="alert alert-warning">
+                    No categories found. The truth is still being uncovered...
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+
+
+
+
+
+
+
+

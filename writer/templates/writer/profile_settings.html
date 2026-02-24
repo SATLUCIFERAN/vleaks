@@ -1,0 +1,111 @@
+
+{% extends 'writer/base.html' %}
+
+{% block title %}Profile Settings - V-Leaks{% endblock %}
+
+{% block nav_profile %}active{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="mb-4">
+    <h2 class="text-danger mb-1">⚙️ Profile Settings</h2>
+    <p class="text-muted mb-0">Customize your anti-hero identity</p>
+</div>
+
+<!-- Profile Form -->
+<div class="row">
+    <div class="col-md-8">
+        <div class="card bg-dark border-secondary">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">Your Profile</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <!-- Current Avatar Preview -->
+                    <div class="mb-4 text-center">
+                        <label class="form-label text-muted d-block">Current Avatar</label>
+                        {% if profile.avatar %}
+                            <img src="{{ profile.avatar.url }}" 
+                                 alt="Profile Picture" 
+                                 class="rounded-circle mb-2"
+                                 style="width: 100px; height: 100px; object-fit: cover; border: 3px solid #dc3545;">
+                        {% else %}
+                            <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-2"
+                                 style="width: 100px; height: 100px; background: linear-gradient(135deg, #dc3545, #ff6b6b); font-size: 2.5rem; color: white;">
+                                {{ request.user.username|slice:":1"|upper }}
+                            </div>
+                            <p class="text-muted small">No profile picture uploaded</p>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Avatar Upload -->
+                    <div class="mb-3">
+                        <label for="avatar" class="form-label">Upload New Avatar</label>
+                        <input type="file" 
+                               class="form-control bg-dark text-white border-secondary" 
+                               id="avatar" 
+                               name="avatar"
+                               accept="image/*">
+                        <small class="text-muted">Recommended: Square image, at least 200x200 pixels</small>
+                    </div>
+                    
+                    <!-- Bio -->
+                    <div class="mb-3">
+                        <label for="bio" class="form-label">Bio</label>
+                        <textarea class="form-control bg-dark text-white border-secondary" 
+                                  id="bio" 
+                                  name="bio" 
+                                  rows="3"
+                                  placeholder="Tell us about yourself...">{{ profile.bio }}</textarea>
+                        <small class="text-muted">Max 500 characters</small>
+                    </div>
+                    
+                    <!-- User Info (Read-only) -->
+                    <div class="mb-3">
+                        <label class="form-label">Username</label>
+                        <input type="text" 
+                               class="form-control bg-secondary text-white border-secondary" 
+                               value="{{ request.user.username }}" 
+                               disabled>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="form-label">Email</label>
+                        <input type="email" 
+                               class="form-control bg-secondary text-white border-secondary" 
+                               value="{{ request.user.email }}" 
+                               disabled>
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-danger">
+                        💾 Save Changes
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tips Sidebar -->
+    <div class="col-md-4">
+        <div class="card bg-dark border-secondary">
+            <div class="card-header border-secondary">
+                <h6 class="mb-0 text-muted">💡 Tips</h6>
+            </div>
+            <div class="card-body">
+                <ul class="text-muted small mb-0">
+                    <li class="mb-2">Use a square image for best results</li>
+                    <li class="mb-2">JPG, PNG, or GIF formats accepted</li>
+                    <li class="mb-2">Your avatar appears in the sidebar</li>
+                    <li>Keep your bio short and memorable</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+
