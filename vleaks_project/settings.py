@@ -164,6 +164,56 @@ LOGIN_URL = 'writer_login'  # ← ADD THIS!
 
 
 
+# ============================================
+# HTTPS / SSL SECURITY SETTINGS
+# ============================================
+# Only enable these in production!
+if not DEBUG:
+    # Redirect all HTTP requests to HTTPS
+    SECURE_SSL_REDIRECT = True
+    
+    # Tell Django we're behind a proxy (PythonAnywhere)
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    
+    # Use secure cookies (HTTPS only)
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    
+    # Enable HSTS (tell browsers to always use HTTPS)
+    SECURE_HSTS_SECONDS = 31536000  # 1 year
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+
+
+
+# ============================================
+# SECURITY HEADERS
+# ============================================
+if not DEBUG:
+    # Prevent clickjacking (don't allow site in iframes)
+    X_FRAME_OPTIONS = 'DENY'
+    
+    # Prevent MIME-type sniffing
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    
+    # Enable browser XSS filter
+    SECURE_BROWSER_XSS_FILTER = True
+
+
+
+# ============================================
+# COOKIE SECURITY
+# ============================================
+if not DEBUG:
+    # Session cookies
+    SESSION_COOKIE_SECURE = True      # Only send over HTTPS
+    SESSION_COOKIE_HTTPONLY = True    # JavaScript can't access
+    SESSION_COOKIE_SAMESITE = 'Lax'   # Prevent CSRF via cookies
+    
+    # CSRF cookies
+    CSRF_COOKIE_SECURE = True         # Only send over HTTPS
+    CSRF_COOKIE_HTTPONLY = True       # JavaScript can't access
+    CSRF_COOKIE_SAMESITE = 'Lax'      # Prevent CSRF
 
 
 
